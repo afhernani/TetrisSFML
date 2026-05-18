@@ -1,0 +1,40 @@
+build/
+cmake-build-*/
+out/
+
+# Compiled files
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# IDE files
+.vscode/
+.idea/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Distribution files (generados automáticamente)
+dist/
+installer/installer_output/
+*.zip
+*.7z
+*.tar.gz
+
+# Fonts (opcional: si no quieres subir la fuente)
+# fonts/*.ttf
+
+# Temporary files
+*.tmp
+*.log
