@@ -1,12 +1,19 @@
 #include "Game.h"
 #include "Constants.h"
+#include "SoundManager.h"
 #include <iostream>
 
 Game::Game() 
-    : window(sf::VideoMode(COLS * BLOCK_SIZE, ROWS * BLOCK_SIZE), "Tetris WSL - SFML"),
+    : window(sf::VideoMode(COLS * BLOCK_SIZE, ROWS * BLOCK_SIZE), "TetrisSFML"),
       fallSpeed(FALL_INTERVAL),
       score(0), level(1), linesCleared(0), gameOver(false) {
     
+    auto& sm = SoundManager::instance();
+    sm.load("rotate", "sounds/rotate.wav");
+    sm.load("drop", "sounds/drop.wav");
+    sm.load("line_clear", "sounds/line_clear.wav");
+    sm.load("game_over", "sounds/game_over.wav");
+
     window.setFramerateLimit(60);
     currentPiece = createRandomPiece();
     nextPiece = createRandomPiece();
@@ -28,12 +35,14 @@ void Game::spawnNewPiece() {
     
     if (board.isGameOver(currentPiece)) {
         gameOver = true;
+        SoundManager::instance().play("game_over");
     }
 }
 
 void Game::tryRotatePiece() {
     if (currentPiece.canRotate(board)) {
         currentPiece.rotate();
+        SoundManager::instance().play("rotate"); 
     } else {
         // Wall kick básico
         int kicks[] = {-1, 1, 0, 0};
@@ -57,7 +66,10 @@ void Game::dropPiece() {
     } else {
         board.lockPiece(currentPiece);
         int cleared = board.clearFullRows();
-        if (cleared > 0) updateScore(cleared);
+        if (cleared > 0) {
+            updateScore(cleared);
+            SoundManager::instance().play("line_clear");
+        }
         spawnNewPiece();
     }
 }
@@ -67,6 +79,7 @@ void Game::hardDrop() {
         currentPiece.y++;
         score += 2; // Bonus por hard drop
     }
+    SoundManager::instance().play("drop");
     dropPiece(); // Fijar inmediatamente
 }
 
@@ -115,6 +128,7 @@ void Game::handleInput() {
                             currentPiece.y++;
                             score += 1;
                         }
+                        SoundManager::instance().play("drop");
                         break;
                     case sf::Keyboard::Up:
                     case sf::Keyboard::Z:

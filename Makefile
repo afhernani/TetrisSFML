@@ -1,12 +1,12 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 SRC_DIR = src
 BUILD_DIR = build
 TARGET = tetris
 
-SRCS = $(SRC_DIR)/Piece.cpp $(SRC_DIR)/Board.cpp $(SRC_DIR)/Game.cpp main.cpp
+SRCS = $(SRC_DIR)/Piece.cpp $(SRC_DIR)/Board.cpp $(SRC_DIR)/Game.cpp $(SRC_DIR)/SoundManager.cpp main.cpp
 OBJS = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(notdir $(SRCS)))
 
 all: $(BUILD_DIR) $(TARGET)
