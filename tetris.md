@@ -13,6 +13,7 @@ g++ main.cpp -o tetris -lsfml-graphics -lsfml-window -lsfml-system -std=c++17
 
 - Con CMake (recomendado):
 ```bash
+rm -rf build # si existe
 mkdir build && cd build
 cmake ..
 make
