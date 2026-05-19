@@ -57,7 +57,7 @@ Sigue estos 4 pasos. Te llevará ~10 minutos.
 ## Paso 0: Hacer el juego portable (cambiar ruta de fuente)
 - Crea una carpeta fonts/ en la raíz de tu proyecto (tetris/fonts/)
 - Descarga cualquier .ttf (ej. DejaVuSans-Bold.ttf) y guárdala como fonts/game_font.ttf
-- Actualiza include/Constants.h:
+- Actualiza `include/Constants.h`:
 ```cpp
 #pragma once
 #include <SFML/Graphics/Color.hpp>
@@ -75,7 +75,7 @@ inline const sf::Color PIECE_COLORS[7] = {
     sf::Color::Red, sf::Color::Blue, sf::Color(255, 165, 0)
 };
 ```
-En src/Game.cpp, simplifica loadFont():
+En `src/Game.cpp`, simplifica loadFont():
 
 ```cpp
 bool Game::loadFont() {
@@ -156,5 +156,118 @@ pause
 - Funciona en cualquier Windows 10/11 de 64 bits sin instalar nada
 - No requiere WSL, Linux, ni Python
 
-¿Quieres que añada ahora un instalador .exe con Inno Setup para que los usuarios lo instalen como cualquier programa, o prefieres optimizar rendimiento/gráficos primero? 
+# Pasos más detallados.
 
+## Paso 1: La fuente (Font)
+
+Dentro de dejavu-fonts-2.37/ busca esta ruta exacta:
+
+```
+dejavu-fonts-2.37/ttf/DejaVuSans.ttf
+```
+Copia y renombra:
+```bash
+# Desde la carpeta donde descomprimiste:
+cp dejavu-fonts-2.37/ttf/DejaVuSans.ttf /home/afhernani/code-c/tetris/fonts/game_font.ttf
+```
+## Paso 2: Preparar todo en Windows
+- 2.1 Copia el proyecto a Windows
+```bash
+# En WSL:
+cd ~
+cp -r code-c/tetris /mnt/c/Users/afhernani/Documents/tetris
+```
+## 2.2 Descarga SFML para Windows
+- Ve a: https://www.sfml-dev.org/download/sfml/2.6.0/
+- Descarga: SFML-2.6.0-windows-vc17-64-bit.zip
+- Extrae en: C:\SFML
+## 2.3 Verifica la estructura
+```
+C:\Users\afhernani\Documents\tetris\
+├── fonts/
+│   └── game_font.ttf          ← Copiada arriba
+├── include/
+├── src/
+├── CMakeLists.txt
+└── ...
+```
+## 🔨 Paso 3: Compilar en Windows
+- 3.1 Abre PowerShell o CMD como administrador:
+```powershell
+cd C:\Users\afhernani\Documents\tetris
+mkdir build
+cd build
+```
+## 3.2 Configura CMake:
+```powershell
+cmake .. -G "Visual Studio 17 2022" -A x64 -DSFML_DIR="C:/SFML/lib/cmake/SFML"
+```
+## 3.3 Compila:
+```powershell
+cmake --build . --config Release
+```
+## Paso 4: Crear carpeta portable (para distribuir)
+- 4.1 Crea la carpeta dist:
+```powershell
+cd C:\Users\afhernani\Documents\tetris
+mkdir dist
+mkdir dist\fonts
+```
+## 4.2 Copia los archivos necesarios:
+```powershell
+# Ejecutable
+copy build\Release\tetris.exe dist\
+
+# Fuentes
+copy fonts\game_font.ttf dist\fonts\
+
+# DLLs de SFML (están en C:\SFML\bin\)
+copy C:\SFML\bin\sfml-system-2.dll dist\
+copy C:\SFML\bin\sfml-window-2.dll dist\
+copy C:\SFML\bin\sfml-graphics-2.dll dist\
+copy C:\SFML\bin\freetype-6.dll dist\
+
+# Audio (si lo usaste)
+copy C:\SFML\bin\sfml-audio-2.dll dist\
+copy C:\SFML\bin\openal32.dll dist\
+```
+## 4.3 Estructura final de `dist/`:
+
+```
+dist/
+├── tetris.exe
+├── sfml-system-2.dll
+├── sfml-window-2.dll
+├── sfml-graphics-2.dll
+├── sfml-audio-2.dll        (si usas sonido)
+├── freetype-6.dll
+├── openal32.dll            (si usas sonido)
+└── fonts/
+    └── game_font.ttf
+```
+## Paso 5: Probar
+
+- Ve a C:\Users\afhernani\Documents\tetris\dist\
+- Haz doble clic en tetris.exe
+
+Debe funcionar SIN WSL, SIN terminal, SIN dependencias externas.
+
+
+## Paso 6: Comprimir para compartir
+```powershell
+cd C:\Users\afhernani\Documents\tetris
+Compress-Archive -Path dist\* -DestinationPath TetrisSFML_Windows.zip
+```
+- Comparte TetrisSFML_Windows.zip y cualquiera puede:
+
+- Descomprimir
+  - Ejecutar tetris.exe
+
+Jugar sin instalar nada
+
+- Si da error "api-ms-win-crt-*.dll is missing"
+
+  - Instala Visual C++ Redistributable:
+    - Descarga: https://aka.ms/vs/17/release/vc_redist.x64.exe
+    - Ejecuta e instala
+    - O copia `vcruntime140.dll` y `msvcp140.dll` de `C:\Windows\System32\` a la carpeta `dist/`

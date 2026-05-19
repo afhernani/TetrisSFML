@@ -8,8 +8,8 @@ constexpr int BLOCK_SIZE = 30;
 constexpr float FALL_INTERVAL = 0.5f;
 
 // Rutas de fuentes (WSL/Linux)
-constexpr const char* FONT_PATH_1 = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf";
-constexpr const char* FONT_PATH_2 = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf";
+constexpr const char* FONT_PATH_1 = "fonts/DejaVuSans-Bold.ttf";
+constexpr const char* FONT_PATH_2 = "fonts/LiberationSans-Bold.ttf";
 
 // Colores de las 7 piezas (I, O, T, S, Z, J, L)
 inline const sf::Color PIECE_COLORS[7] = {
