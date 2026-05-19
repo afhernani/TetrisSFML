@@ -4,10 +4,21 @@
 #include <iostream>
 
 Game::Game() 
-    : window(sf::VideoMode(COLS * BLOCK_SIZE, ROWS * BLOCK_SIZE), "TetrisSFML"),
+    : window(sf::VideoMode(COLS * BLOCK_SIZE, ROWS * BLOCK_SIZE), 
+      "TetrisSFML",
+      sf::Style::Default,
+      sf::ContextSettings(0, 0, 0, 1, 1)),
       fallSpeed(FALL_INTERVAL),
       score(0), level(1), linesCleared(0), gameOver(false) {
     
+    // Cargar y asignar icono a la ventana
+    sf::Image windowIcon;
+    if (windowIcon.loadFromFile("assets/icon.png")) {
+        window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
+    } else {
+        std::cerr << "Warning: No se pudo cargar assets/icon.png\n";
+    }
+
     auto& sm = SoundManager::instance();
     sm.load("rotate", "sounds/rotate.wav");
     sm.load("drop", "sounds/drop.wav");

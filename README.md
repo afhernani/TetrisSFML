@@ -2,7 +2,10 @@
 
 Un clásico juego de Tetris implementado en C++ con SFML. Compatible con Windows, Linux (WSL) y macOS.
 
-![Tetris Screenshot](screenshots/gameplay.png)
+<div align="center">
+  <img src="assets/tetris.png" width="96" alt="TetrisSFML Logo">
+  <h1>TetrisSFML</h1>
+</div>
 
 ## ✨ Características
 
